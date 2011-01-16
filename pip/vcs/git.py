@@ -86,6 +86,9 @@ class Git(VersionControl):
             [self.cmd, 'checkout', '-q'] + rev_options, cwd=dest)
 
     def update(self, dest, rev_options):
+        # Make sure rev_options has origin prefix if needed
+        if rev_options:
+            rev_options = self.check_rev_options(rev_options[0], dest, rev_options)
         # First fetch changes from the default remote
         call_subprocess([self.cmd, 'fetch', '-q'], cwd=dest)
         # Then reset to wanted revision (maby even origin/master)
